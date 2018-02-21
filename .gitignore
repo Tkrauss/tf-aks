@@ -1,0 +1,6 @@
+.credentials
+.pem
+.ppk
+*.tfstate
+*.tfstate*
+.terraform
