@@ -18,6 +18,7 @@ cache:
     - .terraform
 
 before_script:
+  - cd /bootstrap-azure-remote-state
   - terraform --version
   - terraform init
 
