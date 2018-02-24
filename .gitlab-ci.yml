@@ -1,0 +1,1 @@
+include: 'bootstrap-azure-remote-state/.gitlab-ci.yml'
