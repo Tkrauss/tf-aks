@@ -2,12 +2,14 @@
 TF-AKS aims to provide a stable provisioning of the Azure Kubernetes through Terraform.
 The project has just started and is under heavy development.
 
+[![pipeline status](https://gitlab.com/datadarius/tf-aks/badges/master/pipeline.svg)](https://gitlab.com/datadarius/tf-aks/commits/master)
+
 # Planned Features
-Terraform Remote State on Azure File 
-Provisioning of a Azure Kubernetes Cluster including
-A Persistent Storage Backend based on Azure File
-Azure
-A static IP and DNS Namespace assigned
+## Terraform Remote State on Azure File 
+## Provisioning of a Azure Kubernetes Cluster including
+## A Persistent Storage Backend based on Azure File
+## Azure
+## A static IP and DNS Namespace assigned
 
 # General Requirements
 
