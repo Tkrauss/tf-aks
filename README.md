@@ -12,7 +12,10 @@ https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
 ➜ az aks create -n darius-k8s -g darius-k8s-eastus -c 3 -k 1.8.7
 
 persistent volume anlegen
-https://docs.microsoft.com/de-de/azure/aks/azure-files-dynamic-pv
+https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv
+
+ingress IP & Certbot certificate
+https://docs.microsoft.com/en-us/azure/aks/ingress
 
 
 ## Configuring a Service Principal
