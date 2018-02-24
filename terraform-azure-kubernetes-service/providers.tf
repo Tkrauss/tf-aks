@@ -15,3 +15,5 @@ resource "azurerm_resource_group" "development" {
   location = "West Europe"
 }
 
+provider "kubernetes" {
+}

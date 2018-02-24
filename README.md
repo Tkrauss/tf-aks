@@ -1,31 +1,42 @@
 # Terraform to provision Azure Kubernetes Services
+TF-AKS aims to provide a stable provisioning of the Azure Kubernetes through Terraform.
+The project has just started and is under heavy development.
 
+# Planned Features
+Terraform Remote State on Azure File 
+Provisioning of a Azure Kubernetes Cluster including
+A Persistent Storage Backend based on Azure File
+Azure
+A static IP and DNS Namespace assigned
 
-# Preparation
-install latest az
+# General Requirements
 
-
-
-https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
-
-➜ az group create -n darius-k8s-westeurope -l westeurope
-➜ az aks create -n darius-k8s -g darius-k8s-eastus -c 3 -k 1.8.7
-
-persistent volume anlegen
-https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv
-
-ingress IP & Certbot certificate
-https://docs.microsoft.com/en-us/azure/aks/ingress
-
-
-## Configuring a Service Principal
-https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
-https://www.terraform.io/docs/providers/azurerm/authenticating_via_service_principal.html
+* Terraform https://www.terraform.io 
+* Azure Subscription https://azure.microsoft.com/
+* Azure CLI installed and logged in. (az login) https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
 
 # Usage
 
-## Secret Management
+# Security: Please use a Service Principal
+Why?
+https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
+https://www.terraform.io/docs/providers/azurerm/authenticating_via_service_principal.html
 
-# Related Information
+# Persistent Volumes for Kubernetes through Azure File
+https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv
+https://github.com/kubernetes/examples/blob/master/staging/volumes/azure_file/README.md
+
+# Useful Links
+
+## ingress IP & Certbot certificate
+https://docs.microsoft.com/en-us/azure/aks/ingress
+
+## Azure Rest API 
 https://docs.microsoft.com/en-us/rest/api/
-https://github.com/terraform-providers/terraform-provider-azurerm
+
+## Secret Management
+ToDo
+
+# Manual Instructions for az aks
+➜ az group create -n darius-k8s-westeurope -l westeurope
+➜ az aks create -n darius-k8s -g darius-k8s-eastus -c 3 -k 1.8.7
