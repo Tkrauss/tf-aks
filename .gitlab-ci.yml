@@ -21,7 +21,7 @@ cache:
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
-  - chroot bootstrap-azure-remote-state
+  - cd bootstrap-azure-remote-state
   - terraform --version
   - terraform init
 
@@ -35,11 +35,13 @@ stages:
 validate:
   stage: validate
   script:
+    - cd bootstrap-azure-remote-state
     - terraform validate -var-file=$TF_VAR_FILE
 
 plan:
   stage: plan
   script:
+    - cd bootstrap-azure-remote-state
     - terraform plan -out=$PLAN -var-file=$TF_VAR_FILE
   artifacts:
     name: plan
@@ -51,6 +53,7 @@ apply:
   dependencies:
     - plan
   script:
+    - cd bootstrap-azure-remote-state
     - terraform apply -input=false -var-file=$TF_VAR_FILE $PLAN
   only:
     - master
@@ -58,6 +61,7 @@ apply:
 inspec_test:
   stage: inspec_test
   script:
+    - cd bootstrap-azure-remote-state
     - 'echo gem: --no-document > $HOME/.gemrc'
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
