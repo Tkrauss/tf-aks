@@ -39,7 +39,8 @@ validate-bootstrap-azure-remote-state:
     - terraform init
     - terraform validate -var-file=$TF_VAR_FILE -input=false
   artifacts:
-      name: terraformdata
+    name: terraformdata
+    paths:
       - ./.terraform
 
 plan-bootstrap-azure-remote-state:
@@ -86,6 +87,7 @@ validate-terraform-azure-kubernetes-service:
     - terraform validate -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false
   artifacts:
     name: terraformdata2
+    paths:
       - ./.terraform
 
 plan-terraform-azure-kubernetes-service:
