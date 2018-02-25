@@ -14,7 +14,7 @@ variables:
   PLAN: plan.tfplan
   TF_STATE: terraform.tfstate
   TF_VAR_FILE: test.tf-test
-  BUILD_PATH: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
+  BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
 
 cache:
   paths:
@@ -25,7 +25,6 @@ before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   # secret vars required to talk to Azure via inspec
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret export && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id 
-  - cd $BUILD_PATH
   - terraform --version
   - terraform init
   
@@ -37,21 +36,23 @@ stages:
   - deploy
   - inspec_test
 
-validate:
+validate-bootstrap-azure-remote-state:
   stage: validate
   script:
+    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
     - terraform validate -var-file=$TF_VAR_FILE -input=false
 
-plan:
+plan-bootstrap-azure-remote-state:
   stage: plan
   script:
     - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
   artifacts:
     name: $PLAN
     paths:
-      - $BUILD_PATH
+      - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
 
-apply:
+
+apply-bootstrap-azure-remote-state:
   stage: apply
   dependencies:
     - plan
@@ -65,7 +66,7 @@ apply:
   only:
     - master
 
-destroy:
+destroy-bootstrap-azure-remote-state:
   stage: destroy
   dependencies:
     - apply
