@@ -23,7 +23,6 @@ cache:
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   - terraform --version
-  - terraform init
   
 stages:
   - validate
@@ -36,6 +35,7 @@ validate-bootstrap-azure-remote-state:
   stage: validate
   script:
     - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform init
     - terraform validate -var-file=$TF_VAR_FILE -input=false
 
 plan-bootstrap-azure-remote-state:
@@ -72,6 +72,7 @@ validate-terraform-azure-kubernetes-service:
   stage: validate
   script:
     - cd $BUILD_PATH_AZURE_KUBERNETES_SERVICE
+    - terraform init
     - terraform validate -var-file=$TF_VAR_FILE -input=false
 
 plan-terraform-azure-kubernetes-service:
