@@ -50,7 +50,7 @@ plan-bootstrap-azure-remote-state:
 apply-bootstrap-azure-remote-state:
   stage: apply
   dependencies:
-    - plan
+    - plan-bootstrap-azure-remote-state
   script:
     - terraform apply -input=false $PLAN
     - terraform destroy -input=false - force
