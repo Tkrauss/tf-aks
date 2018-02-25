@@ -51,9 +51,6 @@ apply:
     - plan
   script:
     - terraform apply -input=false $PLAN 
-  artifacts:
-    paths:
-    - $PLAN
   only:
     - master
 
