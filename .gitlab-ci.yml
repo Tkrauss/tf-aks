@@ -21,10 +21,12 @@ cache:
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
+  - pwd
   - cd bootstrap-azure-remote-state
-  - terraform --version
+  -terraform --version
   - terraform init
-
+  - ls -las
+  
 stages:
   - validate
   - plan
@@ -35,6 +37,7 @@ stages:
 validate:
   stage: validate
   script:
+    - pwd
     - terraform validate -var-file=$TF_VAR_FILE -input=false
 
 plan:
@@ -44,14 +47,14 @@ plan:
     - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
     - ls
   artifacts:
-    name: plan
+    name: $PLAN
     paths:
       - $PLAN
 
 apply:
   stage: apply
   dependencies:
-    - plan
+    - $PLAN
   script:
     - pwd
     - ls
