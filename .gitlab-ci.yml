@@ -6,7 +6,6 @@
 image:
   name: hashicorp/terraform:light
   entrypoint:
-    - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 # Default output file for Terraform plan
@@ -14,11 +13,11 @@ variables:
   PLAN: plan.tfplan
   TF_STATE: terraform.tfstate
   TF_VAR_FILE: test.tf-test
-  BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
+  BOOTSTRAP_AZURE_REMOTE_STATE: ./bootstrap-azure-remote-state
 
 cache:
   paths:
-    - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE/.terraform
+    - .terraform
 
 before_script:
   # secret vars required to talk to Azure via TF
@@ -26,7 +25,7 @@ before_script:
   # secret vars required to talk to Azure via inspec
   # export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret export && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id 
   - terraform --version
-
+  - terraform init -input=false
   
 stages:
   - validate
@@ -39,19 +38,17 @@ stages:
 validate-bootstrap-azure-remote-state:
   stage: validate
   script:
-    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
-    - terraform init
-    - terraform validate -var-file=$TF_VAR_FILE -input=false
+    - terraform init $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform validate -var-file=$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
 
 plan-bootstrap-azure-remote-state:
   stage: plan
   script:
-    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
-    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
+    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN $BOOTSTRAP_AZURE_REMOTE_STATE
   artifacts:
     name: $PLAN
     paths:
-      - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
+      - $BOOTSTRAP_AZURE_REMOTE_STATE
 
 
 apply-bootstrap-azure-remote-state:
@@ -59,13 +56,11 @@ apply-bootstrap-azure-remote-state:
   dependencies:
     - plan-bootstrap-azure-remote-state
   script:
-    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
     - terraform apply -input=false $PLAN
-    - ls *.tfstate
   artifacts:
     name: $TFSTATE
     paths:
-      - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
+      - $BOOTSTRAP_AZURE_REMOTE_STATE
   only:
     - master
 
@@ -74,8 +69,7 @@ destroy-bootstrap-azure-remote-state:
   dependencies:
     - apply-bootstrap-azure-remote-state
   script:
-  - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE  
-  - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
+  - terraform destroy -var-file=$TF_VAR_FILE -input=false -force 
   only:
     - master
 
