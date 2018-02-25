@@ -42,9 +42,9 @@ plan:
   script:
     - terraform plan -out=$PLAN -var-file=$TF_VAR_FILE
   artifacts:
+    name: plan
     paths:
       - $PLAN
-      - .terraform
 
 apply:
   stage: apply
