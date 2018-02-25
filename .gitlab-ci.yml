@@ -22,6 +22,7 @@ cache:
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
+  - export BUILD_PATH=$BUILDPATH && export TF_VAR_FILE=$TF_VAR_FILE
   - pwd
   - cd $BUILD_PATH
   - terraform --version
