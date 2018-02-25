@@ -15,14 +15,14 @@ The project has just started and is under heavy development.
 * inspec testing to verify resource creation
 
 
-## General Requirements
+##  Requirements
 
 * Terraform https://www.terraform.io 
 * Azure Subscription https://azure.microsoft.com/
 * Azure CLI installed and logged in. (az login) https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
 * kubectl installed https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
-# Usage
+## Usage
 
 ### Required Variables
 ```
