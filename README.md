@@ -4,7 +4,7 @@ TF-AKS aims to provide a stable provisioning of the Azure Kubernetes through Ter
 The project has just started and is under heavy development.
 
 [![pipeline status](https://gitlab.com/datadarius/tf-aks/badges/master/pipeline.svg)](https://gitlab.com/datadarius/tf-aks/commits/master)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b881a797cb75808d006a/test_coverage)](https://codeclimate.com/github/datadarius/tf-aks/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b881a797cb75808d006a/maintainability)](https://codeclimate.com/github/datadarius/tf-aks/maintainability)
 
 ## Planned Features
 * Terraform Remote State on Azure File 
