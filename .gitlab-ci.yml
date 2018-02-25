@@ -20,15 +20,17 @@ cache:
 
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
+  - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
   - cd bootstrap-azure-remote-state
   - terraform --version
   - terraform init
 
 stages:
   - validate
-  - build
-  - deploy
-  - integration_test
+  - plan
+  - apply
+  - inspec_test
+  - destroy
 
 validate:
   stage: validate
@@ -36,7 +38,7 @@ validate:
     - terraform validate -var-file=$TF_VAR_FILE
 
 plan:
-  stage: build
+  stage: plan
   script:
     - terraform plan -out=$PLAN -var-file=$TF_VAR_FILE
   artifacts:
@@ -44,35 +46,25 @@ plan:
     paths:
       - $PLAN
 
-integration_test:
-  stage: integration test
+apply:
+  stage: apply
     dependencies:
     - plan
   script:
     - terraform apply -input=false $PLAN
+    
+  only:
+    - master
+
+inspec_test:
+  stage: inspec_test
+  script:
     - 'echo gem: --no-document > $HOME/.gemrc'
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
-    - gem install kitchen-azurerm kitchen-inspec berkshelf
-    - kitchen test
-    - terraform destroy
+    - gem install inspec
+    -  inspec exec my-profile -t azure://
+    - terraform destroy -input=false
   only:
     - master
 
-
-
-# Separate apply job for manual launching Terraform as it can be destructive
-# action.
-apply:
-  stage: deploy
-    dependencies:
-    - integration test
-  environment:
-    name: production
-  script:
-    - terraform apply -input=false $PLAN
-  dependencies:
-    - plan
-  when: manual
-  only:
-    - master
