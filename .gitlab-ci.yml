@@ -23,7 +23,7 @@ before_script:
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
   - pwd
   - cd bootstrap-azure-remote-state
-  -terraform --version
+  - terraform --version
   - terraform init
   - ls -las
   
