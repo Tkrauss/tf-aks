@@ -35,25 +35,22 @@ stages:
 validate:
   stage: validate
   script:
-    - cd bootstrap-azure-remote-state
     - terraform validate -var-file=$TF_VAR_FILE
 
 plan:
   stage: plan
   script:
-    - cd bootstrap-azure-remote-state
     - terraform plan -out=$PLAN -var-file=$TF_VAR_FILE
   artifacts:
     name: plan
     paths:
-      - $PLAN
+      - ./$PLAN
 
 apply:
   stage: apply
   dependencies:
     - plan
   script:
-    - cd bootstrap-azure-remote-state
     - terraform apply -input=false -var-file=$TF_VAR_FILE $PLAN
   only:
     - master
@@ -61,7 +58,6 @@ apply:
 inspec_test:
   stage: inspec_test
   script:
-    - cd bootstrap-azure-remote-state
     - 'echo gem: --no-document > $HOME/.gemrc'
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
