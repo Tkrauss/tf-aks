@@ -21,7 +21,10 @@ cache:
     - $BUILD_PATH/.terraform
 
 before_script:
+  # secret vars required to talk to Azure via TF
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
+  # secret vars required to talk to Azure via inspec
+  - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret export && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id 
   - cd $BUILD_PATH
   - terraform --version
   - terraform init
@@ -93,5 +96,5 @@ destroy:
 #    - apk update
 #    - apk add build-base git libffi-dev ruby-dev ruby-bundler
 #    - gem install inspec
-#    - AZURE_CLIENT_ID=$client_id \ AZURE_CLIENT_SECRET=$client_secret \ AZURE_TENANT_ID=$tenant_id \ AZURE_SUBSCRIPTION_ID=$subscription_id inspec exec inspec-profile -t azure://
+#    - inspec exec inspec-profile -t azure://
 

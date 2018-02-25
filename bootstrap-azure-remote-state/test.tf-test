@@ -1,2 +1,3 @@
 location = "eastus"
 projectname = "tf-aks"
+prevent_destroy = "false"

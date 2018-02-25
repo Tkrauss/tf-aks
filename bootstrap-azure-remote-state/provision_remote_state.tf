@@ -36,7 +36,7 @@ resource "azurerm_storage_account" "tf_aks_state_sa" {
   account_encryption_source = "Microsoft.Storage"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = "${var.prevent_destroy}"
   }
 
   #  tags = "${(var.resource_tags, map("Name", "${var.projectname}-${var.location}-tfstate"))}"
@@ -50,7 +50,7 @@ resource "azurerm_storage_container" "tf_aks_state" {
   storage_account_name = "${azurerm_storage_account.tf_aks_state_sa.name}"
   container_access_type = "private"
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = "${var.prevent_destroy}"
   }
 
   #  tags = "${(var.resource_tags, map("Name", "${var.projectname}-${var.location}-tfstate"))}"
