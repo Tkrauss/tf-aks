@@ -54,7 +54,7 @@ plan:
 apply:
   stage: apply
   dependencies:
-    - $PLAN
+    - plan
   script:
     - pwd
     - ls
