@@ -8,11 +8,5 @@ ARM_SUBSCRIPTION_ID
 ARM_TENANT_ID
 */
 
-# Resource Group
-resource "azurerm_resource_group" "development" {
-  name     = "${var.projectname}-dev"
-  location = "West Europe"
-}
-
 provider "kubernetes" {
 }

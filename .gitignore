@@ -1,6 +1,9 @@
 .credentials
 .pem
 .ppk
+id_rsa
+id_rsa.pub
+*.id
 *.tfstate
 *.tfstate*
 .terraform
