@@ -12,88 +12,57 @@ image:
 # Default output file for Terraform plan
 variables:
   PLAN: plan.tfplan
-  TF_STATE: terraform.tfstate
   TF_VAR_FILE: test.tf-test
-  BOOTSTRAP_AZURE_REMOTE_STATE: ./bootstrap-azure-remote-state
+  BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
 
 cache:
   paths:
     - .terraform
 
 before_script:
-  # secret vars required to talk to Azure via TF
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
-  # secret vars required to talk to Azure via inspec
-  # export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret export && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id 
+  - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
   - terraform --version
+  - terraform init
   
 stages:
   - validate
   - plan
   - apply
-  - destroy
-  - deploy
   - inspec_test
+  - destroy
 
 validate-bootstrap-azure-remote-state:
   stage: validate
   script:
-    - terraform init -var-file=$BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
-    - terraform validate -var-file=$BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
+    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform validate -var-file=$TF_VAR_FILE -input=false
 
 plan-bootstrap-azure-remote-state:
   stage: plan
   script:
-    - terraform plan -var-file=$BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false -out=$PLAN $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
   artifacts:
     name: $PLAN
     paths:
-      - $BOOTSTRAP_AZURE_REMOTE_STATE
-
+      - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
 
 apply-bootstrap-azure-remote-state:
   stage: apply
   dependencies:
-    - plan-bootstrap-azure-remote-state
+    - plan
   script:
-    - terraform apply -input=false $PLAN $BOOTSTRAP_AZURE_REMOTE_STATE
-  artifacts:
-    name: $TFSTATE
-    paths:
-      - $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform apply -input=false $PLAN
+    - terraform destroy -input=false - force
   only:
     - master
 
-destroy-bootstrap-azure-remote-state:
-  stage: destroy
-  dependencies:
-    - apply-bootstrap-azure-remote-state
-  script:
-  - terraform destroy -var-file=$BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false -force $BOOTSTRAP_AZURE_REMOTE_STATE
-  only:
-    - master
-
-# deploy:
-#   environment:
-#     name: production
-#   dependencies:
-#     - plan
-#   only:
-#   - master
-#   when: manual
-
-
-#TODO move inspec binaries into dedicated image.
-#inspec_test:
-#  stage: inspec_test
-#  dependencies:
-#    - deploy
-#  only:
-#    - master
-#  script:
-#    - 'echo gem: --no-document > $HOME/.gemrc'
-#    - apk update
-#    - apk add build-base git libffi-dev ruby-dev ruby-bundler
-#    - gem install inspec
-#    - inspec exec inspec-profile -t azure://
-
+# inspec_test:
+#   stage: inspec_test
+#   script:
+#     - 'echo gem: --no-document > $HOME/.gemrc'
+#     - apk update
+#     - apk add build-base git libffi-dev ruby-dev ruby-bundler
+#     - gem install inspec
+#     -  inspec exec my-profile -t azure://
+#     - terraform destroy -input=false
