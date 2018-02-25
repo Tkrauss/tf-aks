@@ -12,6 +12,7 @@ The project has just started and is under heavy development.
 * A Persistent Storage Backend based on Azure File
 * Secret Management where necessary
 * A static IP
+* inspec testing to verify resource creation
 
 
 ## General Requirements
@@ -19,6 +20,7 @@ The project has just started and is under heavy development.
 * Terraform https://www.terraform.io 
 * Azure Subscription https://azure.microsoft.com/
 * Azure CLI installed and logged in. (az login) https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
+* kubectl installed https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
 # Usage
 
@@ -50,6 +52,24 @@ TODO
 ### Manual Instructions for az aks
 
 ```
+Creating a Resource Group
 az group create -n your-k8s-tf-resources -l westeurope
+
+Creating an AKS Cluster
 az aks create -n your-k8s-cluster -g your-k8s-tf-resources -c 3 -k 1.8.7
+
+Downloading the kubeconfig
+az aks get-credentials --name your-k8s-cluster --resource your-k8s-tf-resources
+
+Opening the Kubernetes Dashboard in Browser
+az aks browse -n your-k8s-cluster -g your-k8s-tf-resources
+
+Configuring your local kubectl to use the AKS Cluster
+kubectl config use-context your-k8s-cluster
+
+See how many Nodes are running
+kubectl get nodes
 ```
+
+
+

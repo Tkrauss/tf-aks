@@ -12,6 +12,7 @@ image:
 # Default output file for Terraform plan
 variables:
   PLAN: plan.tfplan
+  TF_STATE: terraform.tfstate
   TF_VAR_FILE: test.tf-test
   BUILD_PATH: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
 
@@ -22,11 +23,9 @@ cache:
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
   - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
-  - pwd
   - cd $BUILD_PATH
   - terraform --version
   - terraform init
-  - ls -las
   
 stages:
   - validate
@@ -38,15 +37,12 @@ stages:
 validate:
   stage: validate
   script:
-    - pwd
     - terraform validate -var-file=$TF_VAR_FILE -input=false
 
 plan:
   stage: plan
   script:
-    - pwd
     - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
-    - ls
   artifacts:
     name: $PLAN
     paths:
@@ -57,9 +53,11 @@ apply:
   dependencies:
     - plan
   script:
-    - pwd
-    - ls
     - terraform apply -input=false $PLAN
+  artifacts:
+    name: $TFSTATE
+    paths:
+      - $BUILD_PATH
   only:
     - master
 
@@ -70,8 +68,7 @@ inspec_test:
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
     - gem install inspec
-    - inspec exec my-profile -t azure://$tenant_id
+    - inspec exec inspec-profile -t azure://$tenant_id
 
 after_script:
   - terraform destroy -input=false -force
-
