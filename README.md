@@ -27,21 +27,21 @@ The project has just started and is under heavy development.
 ### Preparation
 
 ```
-Download TF-AKS
+# Download TF-AKS
 git clone git@gitlab.com:datadarius/tf-aks.git
 
-login to azure
+# login to azure
 az login
 
-get your subscription id:
+# get your subscription id
 az account list
 
-create a service principal for your Cluster.
+# create a service principal for your Cluster.
 az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/YOURSUBSCRIPTIONID
 
-Take notes of subscription ID, Service Principal ID (appId), Service Principal Secret (password), you will need them in the next steps.
+# Take notes of subscription ID, Service Principal ID (appId), Service Principal Secret (password), you will # need them in the next steps.
 
-Make sure you have your SSH Pubkey at hand.
+# Make sure you have your SSH Pubkey at hand.
 ```
 
 ### Bring up tf-aks
@@ -49,7 +49,7 @@ Make sure you have your SSH Pubkey at hand.
 cd terraform-azure-kubernetes-service
 terraform init
 
-Start in interactive mode:
+# Start in interactive mode:
 terraform plan -out youraks.out
 
 terraform apply youraks.out
