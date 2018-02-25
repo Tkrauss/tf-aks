@@ -16,6 +16,7 @@ default = "LRS"
 
 variable "prevent_destroy" {
     description = "Will prevent deletion of resources through TF destroy."
+    type = "string"
     default = true
 }
 
