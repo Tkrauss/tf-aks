@@ -73,12 +73,12 @@ validate-terraform-azure-kubernetes-service:
   script:
     - cd $BUILD_PATH_AZURE_KUBERNETES_SERVICE
     - terraform init
-    - terraform validate -var-file=$TF_VAR_FILE -input=false
+    - terraform validate -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false
 
 plan-terraform-azure-kubernetes-service:
   stage: plan
   script:
-    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
+    - terraform plan -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false -out=$PLAN
   artifacts:
     name: $PLAN
     paths:
@@ -90,7 +90,7 @@ apply-terraform-azure-kubernetes-service:
     - plan-terraform-azure-kubernetes-service
   script:
     - terraform apply -input=false $PLAN
-    - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
+    - terraform destroy -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false -force
   when: manual
   only:
     - master
