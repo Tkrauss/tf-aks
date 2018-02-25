@@ -16,7 +16,7 @@ default = "LRS"
 
 variable "prevent_destroy" {
     description = "Will prevent deletion of resources through TF destroy."
-    default = true
+    default = "true"
 }
 
 variable "tf_aks_state_sa_tier"  {
