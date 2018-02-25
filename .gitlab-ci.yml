@@ -38,13 +38,13 @@ stages:
 validate-bootstrap-azure-remote-state:
   stage: validate
   script:
-    - terraform init -var-file=$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
-    - terraform validate -var-file=$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform init -var-file=BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform validate -var-file=BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false $BOOTSTRAP_AZURE_REMOTE_STATE
 
 plan-bootstrap-azure-remote-state:
   stage: plan
   script:
-    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN $BOOTSTRAP_AZURE_REMOTE_STATE
+    - terraform plan -var-file=BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false -out=$PLAN $BOOTSTRAP_AZURE_REMOTE_STATE
   artifacts:
     name: $PLAN
     paths:
@@ -69,7 +69,7 @@ destroy-bootstrap-azure-remote-state:
   dependencies:
     - apply-bootstrap-azure-remote-state
   script:
-  - terraform destroy -var-file=$TF_VAR_FILE -input=false -force $BOOTSTRAP_AZURE_REMOTE_STATE
+  - terraform destroy -var-file=BOOTSTRAP_AZURE_REMOTE_STATE/$TF_VAR_FILE -input=false -force $BOOTSTRAP_AZURE_REMOTE_STATE
   only:
     - master
 
