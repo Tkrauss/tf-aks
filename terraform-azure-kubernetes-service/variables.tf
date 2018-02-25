@@ -32,14 +32,20 @@ variable "k8s_node_count" {
 
 variable "k8s_node_size" {
     type = "string"
-    description = "select the Azure Node Size"
-    default = "DS2_V2"
+    description = "select the Azure Node Size, warning case sensitive..."
+    default = "Standard_DS2_v2"
+}
+
+
+variable "service_principal" {
+    type = "string"
+   description = "Service Principal which will be used by the k8s Cluster"
+
 }
 
 variable "service_principal_secret" {
-}
-
-variable "service_principal" {
+    type = "string"
+    description = "Service Principal Secret which will be used by the k8s Cluster"
 }
 
 variable "dns_prefix" {

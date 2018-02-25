@@ -23,8 +23,10 @@ module "azure-file" {
 
 }
 
+# Azure Kubernetes Service
+# ToDos: Handling Secrets accordingly
 resource "azurerm_kubernetes_cluster" "tf_aks" {
-  name                   = "${var.projectname}-${var.location}-cluster"
+  name                   = "${var.projectname}"
   location               = "${azurerm_resource_group.tf_aks.location}"
   resource_group_name    = "${azurerm_resource_group.tf_aks.name}"
   kubernetes_version     = "${var.k8s_cluster_version}"

@@ -8,33 +8,68 @@ The project has just started and is under heavy development.
 
 ## Planned Features
 * Terraform Remote State on Azure File 
-* Provisioning of a Azure Kubernetes Cluster including
-* A Persistent Storage Backend based on Azure File
-* Secret Management where necessary
-* A static IP
-* inspec testing to verify resource creation
+* Provisioning of a Azure Kubernetes Cluster
+* A Persistent Storage Backend based on Azure File for Kubernetes Volumes.
+* Secret Management where necessary.
+* A static IP.
+* inspec testing to verify resource creation.
 
+## Usage
 
-##  Requirements
+###  Requirements
 
 * Terraform https://www.terraform.io 
 * Azure Subscription https://azure.microsoft.com/
 * Azure CLI installed and logged in. (az login) https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest
 * kubectl installed https://kubernetes.io/docs/tasks/tools/install-kubectl/
+* A Service Principal for your K8s Custer 
 
-## Usage
+### Preparation
 
-### Required Variables
 ```
-location
-projectname
+Download TF-AKS
+git clone git@gitlab.com:datadarius/tf-aks.git
+
+login to azure
+az login
+
+get your subscription id:
+az account list
+
+create a service principal for your Cluster.
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/YOURSUBSCRIPTIONID
+
+Take notes of subscription ID, Service Principal ID (appId), Service Principal Secret (password), you will need them in the next steps.
+
+Make sure you have your SSH Pubkey at hand.
 ```
 
-### Security: Please use a Service Principal
-TODO
-* https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
-* https://www.terraform.io/docs/providers/azurerm/authenticating_via_service_principal.html
+### Bring up tf-aks
+```
+cd terraform-azure-kubernetes-service
+terraform init
 
+Start in interactive mode:
+terraform plan -out youraks.out
+
+terraform apply youraks.out
+```
+
+You should now get a working Azure Kubernetes Cluster.
+
+### Using tf-aks more automated
+You can pass an automatic answerfile to terraform. However, be responsible with the secrets you have to manage.
+It might e.g. make sense to not store Service Principal or other data in flat files. Have a look at the test.tf-test. You can also use terraform like:
+terraform apply -var-file=test.tf-test -var 'service_principal=SECRETVALUE' -var 'service_principal_secret=SECRETVALUE'
+
+## Production Deployments
+### Using a Service Principal for Terraform
+Pleaee consider using a dedicated SP for Terrafprm as explained by Hashicorp:
+https://www.terraform.io/docs/providers/azurerm/authenticating_via_service_principal.html
+
+### Terraform Remote State (Recommended for Production use)
+In case you are going for a production deployment, you will want to persist your state somewhere remote.
+TF-AKS includes everything required to bootstrap a Azure File Container which then can be used as a Storage Backend for your Terraform State. As Terraform does not allow creating the backend within the same project it is going to be used, you will have to do this in sequence
 
 ## Useful Links
 
@@ -48,8 +83,10 @@ TODO
 * https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv
 * https://github.com/kubernetes/examples/blob/master/staging/volumes/azure_file/README.md
 
+### AKS Service Principal
+https://docs.microsoft.com/en-us/azure/container-service/kubernetes/container-service-kubernetes-service-principal
 
-### Manual Instructions for az aks
+## Manual Instructions for az aks
 
 ```
 Creating a Resource Group
