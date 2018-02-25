@@ -50,7 +50,7 @@ apply:
   dependencies:
     - plan
   script:
-    - terraform apply -input=false $PLAN 
+    - terraform apply $PLAN -input=false -var-file=$TF_VAR_FILE
   only:
     - master
 
