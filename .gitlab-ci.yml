@@ -42,7 +42,6 @@ plan:
   script:
     - terraform plan -out=$PLAN -var-file=$TF_VAR_FILE
   artifacts:
-    name: plan
     paths:
       - $PLAN
 
@@ -51,8 +50,10 @@ apply:
   dependencies:
     - plan
   script:
-    - terraform apply -input=false $PLAN
-    
+    - terraform apply -input=false $PLAN 
+  artifacts:
+    paths:
+    - $PLAN
   only:
     - master
 
@@ -65,6 +66,3 @@ inspec_test:
     - gem install inspec
     -  inspec exec my-profile -t azure://
     - terraform destroy -input=false
-  only:
-    - master
-
