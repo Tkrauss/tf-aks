@@ -30,8 +30,9 @@ stages:
   - validate
   - plan
   - apply
-  - inspec_test
   - destroy
+  - deploy
+  - inspec_test
 
 validate:
   stage: validate
@@ -61,17 +62,6 @@ apply:
   only:
     - master
 
-
-#TODO move inspec binaries into dedicated image.
-inspec_test:
-  stage: inspec_test
-  script:
-    - 'echo gem: --no-document > $HOME/.gemrc'
-    - apk update
-    - apk add build-base git libffi-dev ruby-dev ruby-bundler
-    - gem install inspec
-    -  AZURE_CLIENT_ID=$client_id \ AZURE_CLIENT_SECRET=$client_secret \ AZURE_TENANT_ID=$tenant_id \ AZURE_SUBSCRIPTION_ID=$subscription_id inspec exec inspec-profile -t azure://
-
 destroy:
   stage: destroy
   dependencies:
@@ -80,3 +70,28 @@ destroy:
   - terraform destroy -input=false -force
   only:
     - master
+
+# deploy:
+#   environment:
+#     name: production
+#   dependencies:
+#     - plan
+#   only:
+#   - master
+#   when: manual
+
+
+#TODO move inspec binaries into dedicated image.
+#inspec_test:
+#  stage: inspec_test
+#  dependencies:
+#    - deploy
+#  only:
+#    - master
+#  script:
+#    - 'echo gem: --no-document > $HOME/.gemrc'
+#    - apk update
+#    - apk add build-base git libffi-dev ruby-dev ruby-bundler
+#    - gem install inspec
+#    - AZURE_CLIENT_ID=$client_id \ AZURE_CLIENT_SECRET=$client_secret \ AZURE_TENANT_ID=$tenant_id \ AZURE_SUBSCRIPTION_ID=$subscription_id inspec exec inspec-profile -t azure://
+
