@@ -35,6 +35,7 @@ stages:
 validate:
   stage: validate
   script:
+    - terraform init
     - terraform validate -var-file=$TF_VAR_FILE
 
 plan:
@@ -44,13 +45,14 @@ plan:
   artifacts:
     paths:
       - $PLAN
+      - .terraform
 
 apply:
   stage: apply
   dependencies:
     - plan
   script:
-    - terraform apply $PLAN -input=false -var-file=$TF_VAR_FILE
+    - terraform apply -input=false -var-file=$TF_VAR_FILE $PLAN
   only:
     - master
 
