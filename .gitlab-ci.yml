@@ -70,5 +70,5 @@ inspec_test:
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
     - gem install inspec
-    -  inspec exec my-profile -t azure://
+    - inspec exec my-profile -t azure://$AZURE_TENANT_ID
     - terraform destroy -input=false
