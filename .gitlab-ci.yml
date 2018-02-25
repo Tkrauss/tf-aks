@@ -41,6 +41,7 @@ validate-bootstrap-azure-remote-state:
 plan-bootstrap-azure-remote-state:
   stage: plan
   script:
+    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
     - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
   artifacts:
     name: $PLAN
@@ -52,6 +53,7 @@ apply-bootstrap-azure-remote-state:
   dependencies:
     - plan-bootstrap-azure-remote-state
   script:
+    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
     - terraform apply -input=false $PLAN
     - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
   only:
@@ -78,6 +80,7 @@ validate-terraform-azure-kubernetes-service:
 plan-terraform-azure-kubernetes-service:
   stage: plan
   script:
+    - cd $BUILD_PATH_AZURE_KUBERNETES_SERVICE
     - terraform plan -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false -out=$PLAN
   artifacts:
     name: $PLAN
@@ -89,6 +92,7 @@ apply-terraform-azure-kubernetes-service:
   dependencies:
     - plan-terraform-azure-kubernetes-service
   script:
+    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
     - terraform apply -input=false $PLAN
     - terraform destroy -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false -force
   when: manual
