@@ -22,7 +22,6 @@ cache:
 
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
-  - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
   - cd $BUILD_PATH
   - terraform --version
   - terraform init
@@ -54,6 +53,7 @@ apply:
     - plan
   script:
     - terraform apply -input=false $PLAN
+    - ls *.tfstate
   artifacts:
     name: $TFSTATE
     paths:
@@ -68,7 +68,8 @@ inspec_test:
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
     - gem install inspec
-    - inspec exec inspec-profile -t azure://$AZURE_SUBSCRIPTION_ID
+    - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
+    - inspec exec inspec-profile -t azure://
 
 destroy:
   stage: destroy
@@ -76,9 +77,5 @@ destroy:
     - apply
   script:
   - terraform destroy -input=false -force
-  artifacts:
-    name: $TFSTATE
-    paths:
-      - $BUILD_PATH
   only:
     - master
