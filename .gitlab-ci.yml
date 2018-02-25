@@ -67,7 +67,7 @@ destroy:
   dependencies:
     - apply
   script:
-  - terraform destroy -input=false -force
+  - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
   only:
     - master
 
