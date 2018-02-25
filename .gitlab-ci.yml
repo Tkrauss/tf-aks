@@ -14,6 +14,7 @@ variables:
   PLAN: plan.tfplan
   TF_VAR_FILE: test.tf-test
   BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE: /builds/datadarius/tf-aks/bootstrap-azure-remote-state
+  BUILD_PATH_AZURE_KUBERNETES_SERVICE: /builds/datadarius/tf-aks/terraform-azure-kubernetes-service
 
 cache:
   paths:
@@ -21,7 +22,6 @@ cache:
 
 before_script:
   - export ARM_CLIENT_ID=$client_id && export ARM_CLIENT_SECRET=$client_secret && export ARM_TENANT_ID=$tenant_id && export ARM_SUBSCRIPTION_ID=$subscription_id
-  - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
   - terraform --version
   - terraform init
   
@@ -54,6 +54,43 @@ apply-bootstrap-azure-remote-state:
   script:
     - terraform apply -input=false $PLAN
     - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
+  only:
+    - master
+
+# inspec_test:
+#   stage: inspec_test
+#   script:
+#     - 'echo gem: --no-document > $HOME/.gemrc'
+#     - apk update
+#     - apk add build-base git libffi-dev ruby-dev ruby-bundler
+#     - gem install inspec
+#     -  inspec exec my-profile -t azure://
+#     - terraform destroy -input=false
+
+
+validate-terraform-azure-kubernetes-service:
+  stage: validate
+  script:
+    - cd $BUILD_PATH_AZURE_KUBERNETES_SERVICE
+    - terraform validate -var-file=$TF_VAR_FILE -input=false
+
+plan-terraform-azure-kubernetes-service:
+  stage: plan
+  script:
+    - terraform plan -var-file=$TF_VAR_FILE -input=false -out=$PLAN
+  artifacts:
+    name: $PLAN
+    paths:
+      - $BUILD_PATH_AZURE_KUBERNETES_SERVICE
+
+apply-terraform-azure-kubernetes-service:
+  stage: apply
+  dependencies:
+    - plan-terraform-azure-kubernetes-service
+  script:
+    - terraform apply -input=false $PLAN
+    - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
+  when: manual
   only:
     - master
 
