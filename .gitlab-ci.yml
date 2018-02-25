@@ -35,7 +35,6 @@ stages:
 validate:
   stage: validate
   script:
-    - terraform init
     - terraform validate -var-file=$TF_VAR_FILE
 
 plan:
