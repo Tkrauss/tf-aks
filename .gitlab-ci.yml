@@ -53,7 +53,7 @@ apply-bootstrap-azure-remote-state:
     - plan-bootstrap-azure-remote-state
   script:
     - terraform apply -input=false $PLAN
-    - terraform destroy -input=false - force
+    - terraform destroy -input=false -force
   only:
     - master
 
