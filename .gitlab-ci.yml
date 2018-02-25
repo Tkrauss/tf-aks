@@ -55,21 +55,21 @@ plan-bootstrap-azure-remote-state:
 apply-bootstrap-azure-remote-state:
   stage: apply
   dependencies:
-    - plan
+    - plan-bootstrap-azure-remote-state
   script:
     - terraform apply -input=false $PLAN
     - ls *.tfstate
   artifacts:
     name: $TFSTATE
     paths:
-      - $BUILD_PATH
+      - $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
   only:
     - master
 
 destroy-bootstrap-azure-remote-state:
   stage: destroy
   dependencies:
-    - apply
+    - apply-bootstrap-azure-remote-state
   script:
   - terraform destroy -var-file=$TF_VAR_FILE -input=false -force
   only:
