@@ -11,7 +11,7 @@ resource "random_id" "tf_aks_volume_sa_random" {
 resource "azurerm_storage_account" "tf_aks_volume_sa" {
   name                     = "${random_id.tf_aks_volume_sa_random.hex}"
   location                 = "${var.location}"
-  resource_group_name      = "${azurerm_resource_group.tf_aks.name}"
+  resource_group_name      = "${var.resource_group_name}"
   account_replication_type = "${var.tf_aks_volume_sa_replication_type}"
   account_tier             = "${var.tf_aks_volume_sa_tier}"
   enable_file_encryption   = "true" 
@@ -29,7 +29,7 @@ resource "azurerm_storage_account" "tf_aks_volume_sa" {
 # Creation of the storage Container
 resource "azurerm_storage_container" "tf_aks_volume" {
   name                 = "${var.projectname}-tf-aks"
-  resource_group_name  = "${azurerm_resource_group.tf_aks.name}"
+  resource_group_name  = "${var.resource_group_name}"
   storage_account_name = "${azurerm_storage_account.tf_aks_volume_sa.name}"
   container_access_type = "private"
   lifecycle {

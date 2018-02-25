@@ -1,3 +1,6 @@
-location = "eastus"
-projectname = "tf-aks"
-prevent_destroy = false
+location = "East US"
+projectname = "tfaks"
+k8s_cluster_version = "1.8.7"
+dns_prefix = "rndmtest"
+admin_username = "tester"
+admin_rsa_pubkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcw+y5S17OsllhVLIdTmoEFRA7fMkFyc9FOvI0+g4GHDyi48Cke9qDbonlx51HUxFRmCQIOkWN/IdlZK+OepSHY53UiC3p94mKwVHYRBc6xOVoGXM0rsrOYhxY540IpALdYKKgKFv497JYf0Hd+D3Qn45EKT+ThyEIk//hrY2mDLORQsDDV/8uJgUVzpM4w1fROHSTq6pQql1WkhsUVRLQAPQDSQYQCyfAIq1BjqngYo1ZGlPNBdMbY15Gcw5pJGncymgIFnyY+Y4QFZwBH6m8J6ceaTRLt96Ne6h4d+ZyM0xtrzrNFcSflgYC6MxlGJoBdQznHK7hSXkcODpIW0+N"
