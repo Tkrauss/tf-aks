@@ -28,6 +28,7 @@ stages:
   - validate
   - build
   - deploy
+  - integration_test
 
 validate:
   stage: validate
@@ -43,10 +44,29 @@ plan:
     paths:
       - $PLAN
 
+integration_test:
+  stage: integration test
+    dependencies:
+    - plan
+  script:
+    - terraform apply -input=false $PLAN
+    - 'echo gem: --no-document > $HOME/.gemrc'
+    - apk update
+    - apk add build-base git libffi-dev ruby-dev ruby-bundler
+    - gem install kitchen-azurerm kitchen-inspec berkshelf
+    - kitchen test
+    - terraform destroy
+  only:
+    - master
+
+
+
 # Separate apply job for manual launching Terraform as it can be destructive
 # action.
 apply:
   stage: deploy
+    dependencies:
+    - integration test
   environment:
     name: production
   script:
