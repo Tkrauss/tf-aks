@@ -61,6 +61,8 @@ apply:
   only:
     - master
 
+
+#TODO move inspec binaries into dedicated image.
 inspec_test:
   stage: inspec_test
   script:
@@ -68,8 +70,7 @@ inspec_test:
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
     - gem install inspec
-    - export AZURE_CLIENT_ID=$client_id && AZURE_CLIENT_SECRET=$client_secret && AZURE_TENANT_ID=$tenant_id && export AZURE_SUBSCRIPTION_ID=$subscription_id
-    - inspec exec inspec-profile -t azure://
+    -  AZURE_CLIENT_ID=$client_id \ AZURE_CLIENT_SECRET=$client_secret \ AZURE_TENANT_ID=$tenant_id \ AZURE_SUBSCRIPTION_ID=$subscription_id inspec exec inspec-profile -t azure://
 
 destroy:
   stage: destroy
