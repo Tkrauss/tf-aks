@@ -68,7 +68,17 @@ inspec_test:
     - apk update
     - apk add build-base git libffi-dev ruby-dev ruby-bundler
     - gem install inspec
-    - inspec exec inspec-profile -t azure://$tenant_id
+    - inspec exec inspec-profile -t azure://$AZURE_SUBSCRIPTION_ID
 
-after_script:
+destroy:
+  stage: destroy
+  dependencies:
+    - apply
+  script:
   - terraform destroy -input=false -force
+  artifacts:
+    name: $TFSTATE
+    paths:
+      - $BUILD_PATH
+  only:
+    - master
