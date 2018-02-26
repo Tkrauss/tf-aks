@@ -104,14 +104,13 @@ plan-terraform-azure-kubernetes-service:
     name: $PLAN
     paths:
       - $BUILD_PATH_AZURE_KUBERNETES_SERVICE
-      - ./.terraform
 
 apply-terraform-azure-kubernetes-service:
   stage: apply
   dependencies:
     - plan-terraform-azure-kubernetes-service
   script:
-    - cd $BUILD_PATH_BOOTSTRAP_AZURE_REMOTE_STATE
+    - cd $BUILD_PATH_AZURE_KUBERNETES_SERVICE
     - terraform init
     - terraform apply -input=false $PLAN
     - terraform destroy -var-file=$TF_VAR_FILE -var 'service_principal=$client_id' -var 'service_principal_secret=$client_secret' -input=false -force
