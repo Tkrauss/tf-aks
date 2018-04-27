@@ -13,4 +13,3 @@ output "storage_account_id" {
 output "container-name" {
   value = "${azurerm_storage_container.tf_aks_state.name}"
 }
-
